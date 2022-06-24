@@ -10,13 +10,12 @@ function start() {
     if (userFunctionChoose == 'а' || userFunctionChoose == 'Зарегистрироваться') {
         alert('Чтоб пройти регистрацию, укажите все данные, которые потребуются далее');
         register();
-
     } else if (userFunctionChoose == 'б' || userFunctionChoose == 'Авторизироваться') {
         logIn();
     } else if (userFunctionChoose == 'в' || userFunctionChoose == 'Просмотреть список всех пользователей') {
-        
+        checkAllUser();
     } else if (userFunctionChoose == 'г' || userFunctionChoose == 'Изменить данные пользователя') {
-        
+        changeUserData();
     } else if (userFunctionChoose == 'д' || userFunctionChoose == 'Выйти') {
         alert('До скорого!');
     } else {
@@ -69,6 +68,7 @@ function register() {
     userObj['password'] = userPassword;
     
     console.log(userObj);
+    console.log(`Был добавлен новый пользователь - ${userObj['surname']} ${userObj['name']}`);
     
     allUserList.push(userObj);
     console.log(allUserList);
@@ -85,8 +85,76 @@ function isRepeatReg() {
     }
 }
 
-function logIn() {
-    console.log(allUserList);
+function isRepeatLogIn() {
+    isRepeat = confirm('Хотите авторизироваться под другим аккаунтом?');
+    if (isRepeat == true) {
+        logIn();
+    } else {
+        start();
+    }
+}
+
+function logIn() { // fucking hard
+    userLogInEmail = prompt('Введите ваш email');
+    userLogInPassword = prompt('Введите ваш пароль');
+
+    // var 1
+
+    allUserList.forEach(function (elem) {
+        for (let key in elem) {
+            let value = elem[key];
+            let emailValue = elem['email'];
+            let passwordValue = elem['password'];
+
+            if (emailValue == userLogInEmail) {
+                if (passwordValue == userLogInPassword) {
+                    alert('Вы успешно авторизированы!');
+                    console.log(`${key}: ${value}`);
+                } else {
+                    alert('Пользователей с такими данными не найдено!');
+                    logIn();
+                }
+            } else {
+                alert('Пользователей с такими данными не найдено!');
+                logIn();
+            }
+        }
+    });
+
+
+    //var 2
+    
+    // let trueUserEmail = '';
+    // let trueUserPassword = '';
+
+    // allUserList.forEach(function (elem) {
+    //     for (let key in elem) {
+
+    //         console.log(elem);
+    //         console.log(key);
+
+    //         trueUserEmail = elem['email'];
+    //         trueUserPassword = elem['password'];
+    //     }
+    // });
+
+    // if (trueUserEmail == userLogInEmail) {
+    //     if (trueUserPassword == userLogInPassword) {
+    //         alert('Вы успешно авторизированы!');
+    //         allUserList.forEach(function (elem) {
+    //             for (let key in elem) {
+    //                 let value = elem[key];
+    //                 console.log(`${key}: ${value}`);
+    //             }
+    //         });
+    //     } else {
+    //         alert('Пользователей с такими данными не найдено!');
+    //         logIn();
+    //     }
+    // } else {
+    //     alert('Пользователей с такими данными не найдено!');
+    //     logIn();
+    // }
 }
 
 function checkAllUser() {
