@@ -13,7 +13,7 @@ function start() {
     } else if (userFunctionChoose == 'б' || userFunctionChoose == 'Авторизироваться') {
         logIn();
     } else if (userFunctionChoose == 'в' || userFunctionChoose == 'Просмотреть список всех пользователей') {
-        checkAllUser();
+        checkAllUsers();
     } else if (userFunctionChoose == 'г' || userFunctionChoose == 'Изменить данные пользователя') {
         changeUserData();
     } else if (userFunctionChoose == 'д' || userFunctionChoose == 'Выйти') {
@@ -27,8 +27,25 @@ function start() {
 function register() {
     const userObj = {};
 
-    userName = prompt('Введите ваше имя');
-    userSurname = prompt('Введите вашу фамилию');
+    function askUserName() {
+        userName = prompt('Введите ваше имя');
+        if (userName == '') {
+            alert('Ты не ввел имени!');
+            askUserName();
+        }
+        return userName;
+    }
+    userName = askUserName();
+
+    function askUserSurname() {
+        userSurname = prompt('Введите вашу фамилию');
+        if (userSurname == '') {
+            alert('Ты не ввел имени!');
+            askUserSurname();
+        }
+        return userSurname;
+    }
+    userSurname = askUserSurname();
 
     function askUserAge(){
             userAge = +prompt('Введите ваш возраст');
@@ -89,6 +106,15 @@ function isRepeatLogIn() {
     isRepeat = confirm('Хотите авторизироваться под другим аккаунтом?');
     if (isRepeat == true) {
         logIn();
+    } else {
+        start();
+    }
+}
+
+function isRepeatCheckAllUsers() {
+    isRepeat = confirm('Хотите повторить перечисление?');
+    if (isRepeat == true) {
+        checkAllUsers();
     } else {
         start();
     }
@@ -157,8 +183,32 @@ function logIn() { // fucking hard
     // }
 }
 
-function checkAllUser() {
+function checkAllUsers() {
+    console.log(`На данный момент зарегистрировано ${allUserList.length} пользователей`);
+    console.log('---------------------');
 
+    nameAlluser = [];
+
+    allUserList.forEach(function (elem) {
+        for (let key in elem) {
+            let value = elem[key];
+            if (key == 'name') {
+                nameAlluser.push(value);
+            }
+        }
+    });
+    
+    allUserList.forEach(function (elem, index) {
+    console.log(`%cПользователь ${nameAlluser[index]}`, 'color: orange; font-weight: bold');
+    console.log('---------');
+        for (let key in elem) {
+            let value = elem[key];
+            console.log(`${key}: ${value}`);
+        }
+        console.log('---------------------');
+    });
+    
+    isRepeatCheckAllUsers();
 }
 
 function changeUserData() {
