@@ -71,7 +71,7 @@ function register() {
     function askUserPassword() {
         userPassword = prompt('Введите ваш пароль');
         if (userPassword.length < 8){
-            alert('Ты ввел некорректный пароль! Пароль должен быть минимум 8 символов');
+            alert('Ты ввел некорректный пароль!\nПароль должен быть минимум 8 символов');
             askUserPassword();
         }
         return userPassword;
@@ -115,6 +115,15 @@ function isRepeatCheckAllUsers() {
     isRepeat = confirm('Хотите повторить перечисление?');
     if (isRepeat == true) {
         checkAllUsers();
+    } else {
+        start();
+    }
+}
+
+function isRepeatChangeUserData() {
+    isRepeat = confirm('Хотите изменить что-то ещё?');
+    if (isRepeat == true) {
+        changeUserData();
     } else {
         start();
     }
@@ -184,8 +193,14 @@ function logIn() { // fucking hard
 }
 
 function checkAllUsers() {
-    console.log(`На данный момент зарегистрировано ${allUserList.length} пользователей`);
-    console.log('---------------------');
+    if (allUserList.length == 0) {
+        alert('Пока что нету ни одного зарегистрированого пользователя!');
+        start();
+        return;
+    } else {
+        console.log(`На данный момент зарегистрировано ${allUserList.length} пользователей`);
+        console.log('---------------------');
+    }
 
     nameAlluser = [];
 
@@ -207,12 +222,37 @@ function checkAllUsers() {
         }
         console.log('---------------------');
     });
-    
+
     isRepeatCheckAllUsers();
 }
 
 function changeUserData() {
-
+    userObjIndex = +prompt('Какого пользователя будем менять?(числом)');
+    userChangeKey = prompt('Какой пункт ты хочешь изменить?(name, surname, age, email, password)');
+    userChangeValue = prompt('На что ты хочешь заменить данный пункт?');
+    
+    if (userObjIndex > allUserList.length || userObjIndex == 0 || isNaN(userObjIndex)) {
+        alert('Ты выбрал несуществующего пользователя');
+        changeUserData();
+    } else {
+        if (
+            userChangeKey === 'name' ||
+            userChangeKey === 'surname' ||
+            userChangeKey === 'age' ||
+            userChangeKey === 'email' ||
+            userChangeKey === 'password' ||
+            !userChangeKey === ''
+        ) {
+            let obj = allUserList[userObjIndex-1];
+            obj[userChangeKey] = userChangeValue;
+        
+            console.log(allUserList);
+        } else {
+            alert('Ты ввел некорректный пункт!');
+            changeUserData();
+        }
+    }
+    isRepeatChangeUserData();
 }
 
 startFuncbtn.addEventListener('click', start);
