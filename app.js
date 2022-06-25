@@ -133,28 +133,33 @@ function logIn() { // fucking hard
     userLogInEmail = prompt('Введите ваш email');
     userLogInPassword = prompt('Введите ваш пароль');
 
+    if (userLogInEmail == '' || userLogInPassword == '' || userLogInEmail.indexOf('@') == -1) {
+        alert('Ты ввел некорректные значение!');
+        logIn();
+    }
+
     // var 1
 
-    allUserList.forEach(function (elem) {
-        for (let key in elem) {
-            let value = elem[key];
-            let emailValue = elem['email'];
-            let passwordValue = elem['password'];
+    // allUserList.forEach(function (elem) {
+    //     for (let key in elem) {
+    //         let value = elem[key];
+    //         let emailValue = elem['email'];
+    //         let passwordValue = elem['password'];
 
-            if (emailValue == userLogInEmail) {
-                if (passwordValue == userLogInPassword) {
-                    alert('Вы успешно авторизированы!');
-                    console.log(`${key}: ${value}`);
-                } else {
-                    alert('Пользователей с такими данными не найдено!');
-                    logIn();
-                }
-            } else {
-                alert('Пользователей с такими данными не найдено!');
-                logIn();
-            }
-        }
-    });
+    //         if (emailValue == userLogInEmail) {
+    //             if (passwordValue == userLogInPassword) {
+    //                 alert('Вы успешно авторизированы!');
+    //                 console.log(`${key}: ${value}`);
+    //             } else {
+    //                 alert('Пользователей с такими данными не найдено!');
+    //                 logIn();
+    //             }
+    //         } else {
+    //             alert('Пользователей с такими данными не найдено!');
+    //             logIn();
+    //         }
+    //     }
+    // });
 
 
     //var 2
@@ -190,6 +195,50 @@ function logIn() { // fucking hard
     //     alert('Пользователей с такими данными не найдено!');
     //     logIn();
     // }
+
+
+    // var 3
+    
+    let isUserEmailTrue = false;
+    let isUserPasswordTrue = false;
+    let userIndex = 0;
+
+    allUserList.forEach(function (elem, index) {
+        for (let key in elem) {
+            let value = elem[key];
+
+            if (key == 'email' && value == userLogInEmail) {
+                isUserEmailTrue = true;
+            }
+            if (isUserEmailTrue == true && key == 'password' && value == userLogInPassword) { //проверка isUserEmailTrue чтоб послать юзера если он ввел неправильно почту для проверки 
+                isUserPasswordTrue = true;
+                userIndex = index;
+            }
+        }
+    });
+
+    function checkAndCong() {
+        if (isUserEmailTrue == true && isUserPasswordTrue == true) {
+            alert('Вы успешно авторизованы!');
+            console.log('---------------------------');
+            console.log(`
+            Ваши данные:
+            `);
+            
+            for (let key in allUserList[userIndex]) {
+                let value = allUserList[userIndex][key];
+                
+                console.log(`${key}: ${value}`);
+            };
+        } else {
+            alert('Пользователя с такими данными не существует!');
+            logIn();
+        }
+    }
+
+    checkAndCong();
+
+    isRepeatLogIn();
 }
 
 function checkAllUsers() {
