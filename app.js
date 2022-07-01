@@ -1,26 +1,34 @@
 alert('Привет, пользователь');
+const startFuncbtn = document.querySelector('.btn');
 
 let allUserList = [];
 
-const startFuncbtn = document.querySelector('.btn');
-
-function start() {
+function userChangeFunctionHandler() {
     userFunctionChoose = prompt('Выбери, что будет делать: \na) Зарегистрироваться\nб) Авторизироваться\nв) Просмотреть список всех пользователей\nг) Изменить данные пользователя\nд) Выйти');
 
-    if (userFunctionChoose == 'а' || userFunctionChoose == 'Зарегистрироваться') {
+    if (userFunctionChoose.toLowerCase() == 'а' || userFunctionChoose == 'Зарегистрироваться') {
         alert('Чтоб пройти регистрацию, укажите все данные, которые потребуются далее');
         register();
-    } else if (userFunctionChoose == 'б' || userFunctionChoose == 'Авторизироваться') {
+    } else if (userFunctionChoose.toLowerCase() == 'б' || userFunctionChoose == 'Авторизироваться') {
         logIn();
-    } else if (userFunctionChoose == 'в' || userFunctionChoose == 'Просмотреть список всех пользователей') {
+    } else if (userFunctionChoose.toLowerCase() == 'в' || userFunctionChoose == 'Просмотреть список всех пользователей') {
         checkAllUsers();
-    } else if (userFunctionChoose == 'г' || userFunctionChoose == 'Изменить данные пользователя') {
+    } else if (userFunctionChoose.toLowerCase() == 'г' || userFunctionChoose == 'Изменить данные пользователя') {
         changeUserData();
-    } else if (userFunctionChoose == 'д' || userFunctionChoose == 'Выйти') {
+    } else if (userFunctionChoose.toLowerCase() == 'д' || userFunctionChoose == 'Выйти') {
         alert('До скорого!');
     } else {
         alert('Ты ввел некорректное значение!');
-        start();
+        userChangeFunctionHandler();
+    }
+}
+
+function isRepeatFunction(text, repeatFunc) {
+    isRepeat = confirm(text);
+    if (isRepeat == true) {
+        repeatFunc();
+    } else {
+        userChangeFunctionHandler();
     }
 }
 
@@ -84,56 +92,19 @@ function register() {
     userObj['email'] = userEmail;
     userObj['password'] = userPassword;
     
-    console.log(userObj);
     console.log(`Был добавлен новый пользователь - ${userObj['surname']} ${userObj['name']}`);
     
     allUserList.push(userObj);
     console.log(allUserList);
 
-    isRepeatReg();    
+    isRepeatFunction('Добавим ещё одного пользователя?', register);    
 }
 
-function isRepeatReg() {
-    isRepeat = confirm('Добавим ещё одного пользователя?');
-    if (isRepeat == true) {
-        register();
-    } else {
-        start();
-    }
-}
-
-function isRepeatLogIn() {
-    isRepeat = confirm('Хотите авторизироваться под другим аккаунтом?');
-    if (isRepeat == true) {
-        logIn();
-    } else {
-        start();
-    }
-}
-
-function isRepeatCheckAllUsers() {
-    isRepeat = confirm('Хотите повторить перечисление?');
-    if (isRepeat == true) {
-        checkAllUsers();
-    } else {
-        start();
-    }
-}
-
-function isRepeatChangeUserData() {
-    isRepeat = confirm('Хотите изменить что-то ещё?');
-    if (isRepeat == true) {
-        changeUserData();
-    } else {
-        start();
-    }
-}
-
-function logIn() { // fucking hard
+function logIn() {
     userLogInEmail = prompt('Введите ваш email');
     userLogInPassword = prompt('Введите ваш пароль');
 
-    if (userLogInEmail == '' || userLogInPassword == '' || userLogInEmail.indexOf('@') == -1) {
+    if (userLogInEmail == '' && userLogInPassword == '' && userLogInEmail.indexOf('@') == -1) {
         alert('Ты ввел некорректные значение!');
         logIn();
     }
@@ -216,8 +187,8 @@ function logIn() { // fucking hard
             }
         }
     });
-
-    function checkAndCong() {
+    
+    function checkAndPrintUserData() {
         if (isUserEmailTrue == true && isUserPasswordTrue == true) {
             alert('Вы успешно авторизованы!');
             console.log('---------------------------');
@@ -225,20 +196,22 @@ function logIn() { // fucking hard
             Ваши данные:
             `);
             
-            for (let key in allUserList[userIndex]) {
-                let value = allUserList[userIndex][key];
+            userInList = allUserList[userIndex];
+            
+            for (let key in userInList) {
+                let value = userInList[key];
                 
                 console.log(`${key}: ${value}`);
             };
+            
+            isRepeatFunction('Хотите авторизироваться под другим аккаунтом?', logIn);
         } else {
             alert('Пользователя с такими данными не существует!');
             logIn();
         }
     }
-
-    checkAndCong();
-
-    isRepeatLogIn();
+    
+    checkAndPrintUserData();
 }
 
 function checkAllUsers() {
@@ -272,7 +245,7 @@ function checkAllUsers() {
         console.log('---------------------');
     });
 
-    isRepeatCheckAllUsers();
+    isRepeatFunction('Хотите повторить перечисление?', checkAllUsers);
 }
 
 function changeUserData() {
@@ -301,7 +274,7 @@ function changeUserData() {
             changeUserData();
         }
     }
-    isRepeatChangeUserData();
+    isRepeatFunction('Хотите изменить что-то ещё?', changeUserData);
 }
 
-startFuncbtn.addEventListener('click', start);
+startFuncbtn.addEventListener('click', userChangeFunctionHandler);
